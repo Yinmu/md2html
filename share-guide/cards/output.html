@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; width: 1200px; height: 675px; background: #fbfaf7; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; color: #111827; }
+    .card { width: 1120px; height: 595px; margin: 40px; padding: 38px; border: 2px solid #111827; border-radius: 18px; background: #fff; box-shadow: 14px 14px 0 #111827; }
+    h1 { margin: 0 0 24px; font-size: 52px; line-height: 1.08; text-align: center; letter-spacing: 0; }
+    .thesis { width: 760px; margin: 0 auto 24px; padding: 20px; border: 2px solid #111827; border-radius: 12px; background: #fff8d8; text-align: center; font-size: 25px; font-weight: 850; }
+    .tabs { display: inline-flex; gap: 8px; margin: 0 0 18px; padding: 6px; border: 2px solid #111827; border-radius: 999px; }
+    .tab { padding: 8px 22px; border-radius: 999px; font-weight: 900; font-size: 19px; }
+    .tab:first-child { background: #111827; color: #fff; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .mini { min-height: 118px; padding: 16px; border: 2px solid #111827; border-radius: 12px; box-shadow: 4px 4px 0 #111827; }
+    .mini:nth-child(1) { background: #ffd6c9; }
+    .mini:nth-child(2) { background: #dbeafe; }
+    .mini:nth-child(3) { background: #c9f7df; }
+    .mini:nth-child(4) { background: #fff0a8; }
+    .mini:nth-child(5) { background: #eadcff; }
+    .mini:nth-child(6) { background: #c8f3ff; }
+    .num { display: inline-block; margin-bottom: 8px; font-weight: 950; }
+    p { margin: 0; font-size: 18px; line-height: 1.35; font-weight: 760; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>md2html 输出的<br>不是一篇普通长文</h1>
+    <div class="thesis">中心命题：先看懂，再决定要不要读全文</div>
+    <div class="tabs"><span class="tab">极简版</span><span class="tab">精炼版</span></div>
+    <section class="grid">
+      <div class="mini"><span class="num">01</span><p>一节一句，快速扫完全文结构</p></div>
+      <div class="mini"><span class="num">02</span><p>重点句不靠摘录，而靠归纳</p></div>
+      <div class="mini"><span class="num">03</span><p>想深入，再切到精炼版</p></div>
+      <div class="mini"><span class="num">04</span><p>全文折叠保留，随时展开</p></div>
+      <div class="mini"><span class="num">05</span><p>点击卡片跳到详细段落</p></div>
+      <div class="mini"><span class="num">06</span><p>正文里可一键回到图文导读</p></div>
+    </section>
+  </main>
+</body>
+</html>

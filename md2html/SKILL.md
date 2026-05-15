@@ -1,11 +1,11 @@
 ---
-name: longform-html
+name: md2html
 description: Use when the user wants to turn a long Markdown article, draft, essay, report, transcript, or plain-text document into a human-friendly visual HTML experience with colorful mind maps, graphic section cards, summaries, pull quotes, navigation, and responsive layout. Trigger for requests like "make this long doc easier to read", "convert this article to HTML", "HTML is better for humans than long Markdown", "make a colorful mind map", "make this into visual cards", "present this copy as an HTML page", or "create a readable web version of this long text".
 metadata:
   short-description: Turn long text into visual HTML
 ---
 
-# Longform HTML
+# md2html
 
 Transform long text into a visual HTML understanding experience for humans, not a mechanical Markdown export.
 
@@ -24,7 +24,7 @@ Default to a single self-contained `.html` file with visual-first sections and a
 
 1. Read the source article or accept pasted text.
 2. Identify the title, subtitle, section hierarchy, repeated motifs, and 3-7 key ideas.
-3. If the source is Markdown or plain text, render it with `scripts/render_longform_html.py`.
+3. If the source is Markdown or plain text, render it with `scripts/render_md2html.py`.
 4. Improve the generated HTML when needed:
    - Add a useful visual summary if the article lacks one.
    - Split very long sections with subheads.
@@ -41,13 +41,13 @@ Default to a single self-contained `.html` file with visual-first sections and a
 Use the bundled script for the first pass:
 
 ```bash
-python3 scripts/render_longform_html.py input.md output.html
+python3 scripts/render_md2html.py input.md output.html
 ```
 
 Optional flags:
 
 ```bash
-python3 scripts/render_longform_html.py input.md output.html --title "Readable Title" --accent "#2563eb"
+python3 scripts/render_md2html.py input.md output.html --title "Readable Title" --accent "#2563eb"
 ```
 
 The script is intentionally dependency-free and creates a complete HTML document with embedded CSS and JavaScript. It automatically builds a visual brief, mind-map nodes, section cards, and a collapsed full-text section.

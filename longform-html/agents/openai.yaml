@@ -1,7 +1,0 @@
-interface:
-  display_name: "Longform HTML"
-  short_description: "Turn long articles into visual HTML pages"
-  brand_color: "#2563EB"
-  default_prompt: "Use $longform-html to turn this long Markdown article into a colorful visual HTML page with mind-map cards."
-policy:
-  allow_implicit_invocation: true

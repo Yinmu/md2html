@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; width: 1200px; height: 675px; background: #f7fbff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; color: #111827; }
+    .card { width: 1120px; height: 595px; margin: 40px; padding: 46px; border: 2px solid #111827; border-radius: 18px; background: #dbeafe; box-shadow: 14px 14px 0 #111827; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; height: 100%; align-items: center; }
+    h1 { margin: 0 0 18px; font-size: 62px; line-height: 1.05; letter-spacing: 0; }
+    p { margin: 0; font-size: 26px; line-height: 1.42; color: #374151; }
+    .prompt { padding: 28px; border: 2px solid #111827; border-radius: 16px; background: #fff; box-shadow: 7px 7px 0 rgba(17,24,39,.9); }
+    .label { font-size: 18px; font-weight: 900; color: #2563eb; letter-spacing: .08em; text-transform: uppercase; }
+    pre { white-space: pre-wrap; margin: 18px 0 0; font-size: 31px; line-height: 1.32; font-weight: 800; }
+    .arrow { margin-top: 26px; font-size: 48px; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="grid">
+      <section>
+        <h1>md2html<br>用法只有一句话</h1>
+        <p>把长文丢给 Codex，让它用这个 skill 生成一个视觉 HTML 页面。</p>
+        <div class="arrow">→</div>
+      </section>
+      <section class="prompt">
+        <div class="label">Prompt</div>
+        <pre>Use $md2html
+to turn this long article
+into a visual HTML page.</pre>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

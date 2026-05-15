@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render Markdown or plain text into a self-contained longform HTML page."""
+"""Render Markdown or plain text into a self-contained visual HTML page."""
 
 from __future__ import annotations
 
@@ -234,7 +234,7 @@ def infer_title(text: str) -> str:
         clean = line.strip().strip("#").strip()
         if clean:
             return clean[:80]
-    return "Longform Article"
+    return "Markdown Article"
 
 
 def reading_stats(text: str) -> tuple[int, int]:

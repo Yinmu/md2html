@@ -1,4 +1,4 @@
-# Longform HTML Skill
+# md2html Skill
 
 Turn long Markdown or plain-text articles into visual-first HTML pages with:
 
@@ -9,11 +9,11 @@ Turn long Markdown or plain-text articles into visual-first HTML pages with:
 
 ## Install
 
-Copy the `longform-html` folder into your Codex skills directory:
+Copy the `md2html` folder into your Codex skills directory:
 
 ```bash
 mkdir -p ~/.codex/skills
-cp -R longform-html ~/.codex/skills/longform-html
+cp -R md2html ~/.codex/skills/md2html
 ```
 
 Restart Codex if the skill list does not refresh automatically.
@@ -23,19 +23,19 @@ Restart Codex if the skill list does not refresh automatically.
 Ask Codex:
 
 ```text
-Use $longform-html to turn this long Markdown article into a visual HTML page.
+Use $md2html to turn this long Markdown article into a visual HTML page.
 ```
 
 Or run the bundled renderer directly:
 
 ```bash
-python3 ~/.codex/skills/longform-html/scripts/render_longform_html.py input.md output.html
+python3 ~/.codex/skills/md2html/scripts/render_md2html.py input.md output.html
 ```
 
 Optional:
 
 ```bash
-python3 ~/.codex/skills/longform-html/scripts/render_longform_html.py input.md output.html --title "Article Title" --accent "#d92d20"
+python3 ~/.codex/skills/md2html/scripts/render_md2html.py input.md output.html --title "Article Title" --accent "#d92d20"
 ```
 
 The output is a self-contained `.html` file.
