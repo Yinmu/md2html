@@ -10,19 +10,7 @@ Turn long Markdown or plain-text learning materials into visual-first HTML learn
 - colorful section cards
 - collapsed full text with return links back to the visual guide
 
-## Simplest Use
-
-For friends who do not use Codex or do not have Python installed:
-
-1. Download this repository as a ZIP.
-2. Open `md2html/tool.html` in a browser.
-3. Paste a Markdown article.
-4. Click **生成预览**.
-5. Download the generated `.html` learning page.
-
-This browser tool is a single local HTML file. It does not need Python, pip, npm, a server, or an internet connection.
-
-## Use Inside Codex
+## Install In Codex / Claude Code
 
 Copy the `md2html` folder into your Codex skills directory:
 
@@ -39,18 +27,26 @@ Ask Codex:
 Use $md2html to turn this long Markdown article into an HTML learning interface.
 ```
 
-## Optional Command Line
+## Renderer
 
-The command-line renderer is useful for automation. It requires Python 3, but uses only the standard library and has no pip dependencies:
+The default renderer is JavaScript and only requires Node.js. It has no npm dependencies:
 
 ```bash
-python3 ~/.codex/skills/md2html/scripts/render_md2html.py input.md output.html
+node ~/.codex/skills/md2html/scripts/render_md2html.js input.md output.html
 ```
 
 Optional:
 
 ```bash
-python3 ~/.codex/skills/md2html/scripts/render_md2html.py input.md output.html --title "Article Title" --accent "#d92d20"
+node ~/.codex/skills/md2html/scripts/render_md2html.js input.md output.html --title "Article Title" --accent "#d92d20"
 ```
 
 The output is a self-contained `.html` file.
+
+## Optional Browser Tool
+
+`md2html/tool.html` is a local visual tester. Open it in a browser, paste Markdown, generate a preview, and download the result. It is useful for quick manual experiments, but the skill itself should prefer the Node.js renderer in agent workflows.
+
+## Legacy Python Renderer
+
+`md2html/scripts/render_md2html.py` is kept for compatibility. New usage should prefer the JavaScript renderer.
