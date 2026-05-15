@@ -552,21 +552,20 @@ def learning_html(sections: list[VisualSection]) -> str:
           <article class="study-card">
             <span>03</span>
             <h3>最后回查</h3>
-            <p>用自测题确认理解，再回到完整正文验证细节。</p>
+            <p>回到完整正文验证细节；需要时再做理解检查。</p>
           </article>
         </div>
 
-        <div class="learning-columns">
-          <section class="concepts" aria-label="Core concepts">
-            <h3>核心概念</h3>
-            <div class="concept-grid">{''.join(concept_cards)}</div>
-          </section>
-          <section class="quiz" aria-label="Self test">
-            <h3>自测问题</h3>
-            <div class="quiz-list">{''.join(quiz_items)}</div>
-          </section>
-        </div>
+        <section class="concepts" aria-label="Core concepts">
+          <h3>核心概念</h3>
+          <div class="concept-grid">{''.join(concept_cards)}</div>
+        </section>
       </section>
+
+      <details class="check-understanding">
+        <summary>想确认自己是否理解？展开 5 个问题</summary>
+        <div class="quiz-list">{''.join(quiz_items[:5])}</div>
+      </details>
     '''
 
 
@@ -874,7 +873,7 @@ HTML_TEMPLATE = """<!doctype html>
       font-size: 13px;
       font-weight: 900;
     }}
-    .study-card h3, .concepts h3, .quiz h3 {{
+    .study-card h3, .concepts h3 {{
       margin: 0 0 10px;
       font-size: 21px;
     }}
@@ -884,15 +883,9 @@ HTML_TEMPLATE = """<!doctype html>
       font-size: 15px;
       line-height: 1.55;
     }}
-    .learning-columns {{
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
-      gap: 22px;
-      align-items: start;
-    }}
     .concept-grid {{
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
     }}
     .concept-card {{
@@ -916,6 +909,28 @@ HTML_TEMPLATE = """<!doctype html>
     .quiz-list {{
       display: grid;
       gap: 10px;
+    }}
+    .check-understanding {{
+      max-width: var(--measure);
+      margin: 22px auto 0;
+      padding: 0;
+    }}
+    .check-understanding > summary {{
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 8px 14px;
+      border: 1px solid #111827;
+      border-radius: 999px;
+      background: #fff8d8;
+      box-shadow: 3px 3px 0 #111827;
+      font-weight: 800;
+      list-style: none;
+    }}
+    .check-understanding > summary::-webkit-details-marker {{ display: none; }}
+    .check-understanding .quiz-list {{
+      margin-top: 18px;
     }}
     .quiz-item {{
       border: 1px solid var(--line);
@@ -1065,7 +1080,7 @@ HTML_TEMPLATE = """<!doctype html>
       .shell {{
         padding: 28px 20px 72px;
       }}
-      .idea-grid, .minimal-grid, .study-grid, .learning-columns, .concept-grid {{ grid-template-columns: 1fr; }}
+      .idea-grid, .minimal-grid, .study-grid, .concept-grid {{ grid-template-columns: 1fr; }}
       .map-core {{ min-height: auto; text-align: left; }}
       .tabbar {{ width: 100%; display: grid; grid-template-columns: 1fr 1fr; }}
       header {{ padding-top: 22px; }}

@@ -6,7 +6,7 @@ Turn long Markdown or plain-text learning materials into visual-first HTML learn
 - density tabs for minimal and refined summaries
 - a study path
 - core concept cards
-- self-test questions
+- optional understanding-check questions
 - colorful section cards
 - collapsed full text with return links back to the visual guide
 
