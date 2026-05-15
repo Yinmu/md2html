@@ -21,12 +21,17 @@ The output should help a real reader:
 
 Default to a single self-contained `.html` file with visual-first study sections and a collapsed full-text archive unless the user asks for assets or a full app.
 
+For non-technical sharing, prefer the bundled `tool.html` browser tool: it lets users paste Markdown and download the generated learning page without Python, pip, npm, or a local server.
+
 ## Workflow
 
 1. Read the source article or accept pasted text.
 2. Identify the title, subtitle, section hierarchy, repeated motifs, and 3-7 key ideas.
-3. If the source is Markdown or plain text, render it with `scripts/render_md2html.py`.
-4. Improve the generated HTML when needed:
+3. Choose the simplest rendering path:
+   - For a user-facing one-off tool, point them to `tool.html`.
+   - For Codex automation or batch rendering, use `scripts/render_md2html.py`.
+4. If the source is Markdown or plain text, render it with the chosen path.
+5. Improve the generated HTML when needed:
    - Add a useful visual summary if the article lacks one.
    - Add a learning path: skim map, learn concepts, then verify in the original text.
    - Extract core concepts and make them easier to review.
@@ -35,14 +40,16 @@ Default to a single self-contained `.html` file with visual-first study sections
    - Promote memorable lines into cards, nodes, or pull quotes.
    - Collapse or de-emphasize full paragraphs when the user wants scanning over reading.
    - Preserve the author's meaning and order.
-5. Verify the result:
+6. Verify the result:
    - Open the HTML locally when browser tools are available.
    - Check desktop and mobile widths.
    - Ensure text does not overlap and navigation works.
 
 ## Rendering
 
-Use the bundled script for the first pass:
+For the simplest no-install workflow, open `tool.html` in a browser, paste Markdown, generate the preview, then download the output HTML. This path is best for sharing with friends because it has no runtime dependency.
+
+For automated rendering, use the bundled script:
 
 ```bash
 python3 scripts/render_md2html.py input.md output.html
@@ -54,7 +61,7 @@ Optional flags:
 python3 scripts/render_md2html.py input.md output.html --title "Readable Title" --accent "#2563eb"
 ```
 
-The script is intentionally dependency-free and creates a complete HTML document with embedded CSS and JavaScript. It automatically builds a central thesis, density tabs, concept cards, a learning path, optional understanding-check questions, and a collapsed full-text section.
+The script is intentionally pip-free and creates a complete HTML document with embedded CSS and JavaScript. It automatically builds a central thesis, density tabs, concept cards, a learning path, optional understanding-check questions, and a collapsed full-text section.
 
 ## Design Rules
 

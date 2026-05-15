@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>md2html</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #fbfaf7;
+      color: #111827;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.6;
+    }
+    .app {
+      display: grid;
+      grid-template-columns: minmax(320px, 430px) minmax(0, 1fr);
+      min-height: 100vh;
+    }
+    aside {
+      padding: 28px;
+      border-right: 1px solid #111827;
+      background: #fff;
+    }
+    main {
+      padding: 28px;
+      overflow: auto;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 38px;
+      line-height: 1.05;
+    }
+    .sub {
+      margin: 0 0 22px;
+      color: #5f6673;
+    }
+    label {
+      display: block;
+      margin: 16px 0 8px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    input, textarea {
+      width: 100%;
+      border: 1px solid #111827;
+      border-radius: 8px;
+      background: #fff;
+      color: #111827;
+      font: inherit;
+    }
+    input { min-height: 42px; padding: 8px 10px; }
+    textarea {
+      min-height: 48vh;
+      padding: 12px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    button {
+      cursor: pointer;
+      min-height: 42px;
+      border: 1px solid #111827;
+      border-radius: 999px;
+      background: #111827;
+      color: #fff;
+      font: inherit;
+      font-weight: 900;
+    }
+    button.secondary {
+      background: #fff8d8;
+      color: #111827;
+      box-shadow: 3px 3px 0 #111827;
+    }
+    .hint {
+      margin-top: 14px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+    iframe {
+      width: 100%;
+      min-height: calc(100vh - 56px);
+      border: 1px solid #111827;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 6px 6px 0 #111827;
+    }
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+      aside { border-right: 0; border-bottom: 1px solid #111827; }
+      textarea { min-height: 260px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <h1>md2html</h1>
+      <p class="sub">把 Markdown 变成 HTML 学习界面。零依赖，浏览器里直接用。</p>
+
+      <label for="title">标题</label>
+      <input id="title" placeholder="留空则自动读取 Markdown 第一个标题">
+
+      <label for="source">Markdown / 长文</label>
+      <textarea id="source" spellcheck="false"># AI时代，最值钱的不是简历，是作品
+
+## 1. 过去普通人很难证明自己
+
+普通人不是没有想法，而是想法很难落地成一个能被别人验证的东西。
+
+## 2. AI 把作品证明的成本打下来了
+
+AI 降低制作门槛，但真正稀缺的是判断和取舍。
+
+## 3. 样片比简历有用一百倍
+
+作品比简历更有说服力，因为它能被直接验证。</textarea>
+
+      <div class="actions">
+        <button id="render">生成预览</button>
+        <button id="download" class="secondary">下载 HTML</button>
+      </div>
+      <p class="hint">不需要 Python。打开这个文件，粘贴 Markdown，生成后下载 HTML。</p>
+    </aside>
+    <main>
+      <iframe id="preview" title="md2html preview"></iframe>
+    </main>
+  </div>
+
+  <script>
+    const palette = ["coral", "blue", "green", "gold", "violet", "cyan", "rose", "slate"];
+    const colors = {
+      coral: "#ffd6c9",
+      blue: "#dbeafe",
+      green: "#c9f7df",
+      gold: "#fff0a8",
+      violet: "#eadcff",
+      cyan: "#c8f3ff",
+      rose: "#ffd6e8",
+      slate: "#e7ecf2"
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const escapeHtml = (text) => String(text).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+    const plain = (text) => String(text)
+      .replace(/^\s*#{1,6}\s+/gm, "")
+      .replace(/^\s*[-*+]\s+/gm, "")
+      .replace(/^\s*\d+[.)]\s+/gm, "")
+      .replace(/[*_`#\[\]]+/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    const slugify = (text, used) => {
+      let slug = plain(text).toLowerCase().replace(/[^a-zA-Z0-9\u4e00-\u9fff]+/g, "-").replace(/^-+|-+$/g, "") || "section";
+      const base = slug;
+      let i = 2;
+      while (used.has(slug)) slug = `${base}-${i++}`;
+      used.add(slug);
+      return slug;
+    };
+    const short = (text, max = 80) => {
+      const clean = plain(text);
+      return clean.length <= max ? clean : `${clean.slice(0, max - 1).trim()}...`;
+    };
+    const splitBlocks = (text) => text.replace(/\r\n?/g, "\n").trim().split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean);
+    const splitSentences = (text) => plain(text).split(/(?<=[。！？!?；;])\s*/).map((x) => x.trim()).filter((x) => x.length > 6);
+    const scoreSentence = (s) => {
+      const keywords = ["不是", "而是", "因为", "所以", "关键", "真正", "价值", "机会", "门槛", "证明", "作品", "判断", "能力", "成本", "验证", "核心"];
+      let score = keywords.reduce((sum, k) => sum + (s.includes(k) ? 3 : 0), 0);
+      if (s.length >= 18 && s.length <= 90) score += 4;
+      if (s.endsWith("：") || s.endsWith(":")) score -= 8;
+      return score;
+    };
+    const bestPoints = (paras, count = 3) => {
+      const candidates = [];
+      paras.forEach((p, pi) => splitSentences(p).forEach((s, si) => candidates.push({ s, score: scoreSentence(s), pos: pi * 20 + si })));
+      candidates.sort((a, b) => b.score - a.score || a.pos - b.pos);
+      const selected = [];
+      for (const item of candidates) {
+        if (!selected.some((x) => x.includes(item.s) || item.s.includes(x))) selected.push(short(item.s, 86));
+        if (selected.length >= count) break;
+      }
+      for (const p of paras) {
+        if (selected.length >= count) break;
+        const fallback = short(p, 86);
+        if (fallback && !selected.includes(fallback)) selected.push(fallback);
+      }
+      return selected;
+    };
+    const minimalSummary = (section) => {
+      const text = `${section.title} ${section.quote} ${section.bullets.join(" ")}`;
+      const rules = [
+        [["最值钱", "简历", "作品"], "最值钱的不是简历，而是可被看见和验证的作品。"],
+        [["过去", "证明"], "核心障碍：能力很难低成本变成可验证的作品。"],
+        [["AI", "成本"], "AI 降低制作门槛，但真正稀缺的是判断和取舍。"],
+        [["样片", "简历"], "作品比简历更有说服力，因为它能被直接验证。"]
+      ];
+      for (const [keys, summary] of rules) if (keys.every((k) => text.includes(k))) return summary;
+      return section.quote || section.bullets[0] || "这一节需要回到原文查看细节。";
+    };
+
+    function parseMarkdown(markdown, titleOverride) {
+      const used = new Set();
+      const blocks = splitBlocks(markdown);
+      let title = titleOverride.trim();
+      const sections = [];
+      let current = null;
+      const body = [];
+
+      for (const block of blocks) {
+        const heading = block.match(/^(#{1,4})\s+(.+)$/);
+        if (heading) {
+          const level = heading[1].length;
+          const text = plain(heading[2]);
+          if (!title && level === 1) {
+            title = text;
+            continue;
+          }
+          const slug = slugify(text, used);
+          body.push(`<h${level} id="${slug}">${escapeHtml(text)} <a class="back-to-visual" href="#visual-map">回到图文导读</a></h${level}>`);
+          if (level <= 2) {
+            current = { title: text, slug, paras: [] };
+            sections.push(current);
+          }
+          continue;
+        }
+        const text = plain(block);
+        if (!text) continue;
+        if (!current) {
+          current = { title: "核心故事", slug: slugify("核心故事", used), paras: [] };
+          sections.push(current);
+        }
+        current.paras.push(text);
+        body.push(`<p>${escapeHtml(text)}</p>`);
+      }
+
+      const visualSections = sections.slice(0, 10).map((s, index) => {
+        const bullets = bestPoints(s.paras, 3);
+        return { title: s.title, slug: s.slug, bullets, quote: bullets[0] || "", index };
+      });
+      return { title: title || "Markdown Article", sections: visualSections, body: body.join("\n") };
+    }
+
+    function buildHtml(markdown, titleOverride = "") {
+      const data = parseMarkdown(markdown, titleOverride);
+      const cards = data.sections.map((s, i) => {
+        const tone = palette[i % palette.length];
+        return `<a class="minimal-card" style="background:${colors[tone]}" href="#${s.slug}"><span>${String(i + 1).padStart(2, "0")}</span><strong>${escapeHtml(s.title)}</strong><em>${escapeHtml(minimalSummary(s))}</em></a>`;
+      }).join("");
+      const refined = data.sections.map((s, i) => {
+        const tone = palette[i % palette.length];
+        return `<a class="idea-card" style="background:${colors[tone]}" href="#${s.slug}"><span>${String(i + 1).padStart(2, "0")}</span><h3>${escapeHtml(s.title)}</h3><ul>${s.bullets.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}</ul></a>`;
+      }).join("");
+      const concepts = data.sections.slice(1, 7).map((s) => `<article class="concept-card"><strong>${escapeHtml(s.title.replace(/^\d+[.、]\s*/, ""))}</strong><p>${escapeHtml(minimalSummary(s))}</p></article>`).join("");
+      const questions = data.sections.slice(0, 5).map((s) => `<details class="quiz-item"><summary>这一节最需要记住的判断是什么：${escapeHtml(s.title.replace(/[。.!！]+$/, ""))}？</summary><p>${escapeHtml(minimalSummary(s))}</p></details>`).join("");
+      return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(data.title)}</title><style>
+        *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#fbfaf7;color:#111827;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;line-height:1.7}.shell{max-width:1120px;margin:0 auto;padding:42px 28px 96px}h1{text-align:center;font-size:clamp(34px,5vw,58px);line-height:1.1}.map-core{max-width:820px;margin:18px auto 30px;padding:24px 28px;border:1px solid #111827;border-radius:8px;background:#fff;text-align:center;box-shadow:5px 5px 0 #111827}.map-core span{display:block;color:#5f6673;font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.map-core strong{display:block;margin:8px 0;font-size:clamp(22px,3vw,30px)}.map-core em{color:#5f6673;font-style:normal}.tabbar{display:inline-flex;gap:8px;padding:6px;border:1px solid #111827;border-radius:999px;background:#fff;box-shadow:4px 4px 0 #111827}.tab-button{cursor:pointer;min-height:38px;padding:7px 18px;border:0;border-radius:999px;background:transparent;color:#4b5563;font:inherit;font-weight:900}.tab-button.active{background:#111827;color:#fff}.tab-panel{display:none;margin-top:22px}.tab-panel.active{display:block}.minimal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.minimal-card,.idea-card{display:grid;gap:8px;padding:16px;border:1px solid #111827;border-radius:8px;color:#111827;text-decoration:none;box-shadow:4px 4px 0 #111827}.minimal-card span,.idea-card span{font-weight:950}.minimal-card em{color:#4b5563;font-style:normal;font-size:14px}.idea-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.idea-card{min-height:220px}.study-system{margin:52px 0 44px;padding:28px;border:1px solid #111827;border-radius:8px;background:#fff;box-shadow:6px 6px 0 #111827}.section-heading span{color:#d92d20;font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.study-grid,.concept-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.study-card,.concept-card{padding:16px;border:1px solid #e6e8eb;border-radius:8px;background:#f8fbff}.check-understanding,details.fulltext{max-width:820px;margin:22px auto 0}.check-understanding>summary,details.fulltext>summary{cursor:pointer;display:inline-flex;min-height:42px;padding:8px 14px;border:1px solid #111827;border-radius:999px;background:#fff8d8;box-shadow:3px 3px 0 #111827;font-weight:800}.quiz-list{display:grid;gap:10px;margin-top:18px}.quiz-item{padding:0;border:1px solid #e6e8eb;border-radius:8px;background:#fff8d8}.quiz-item summary{cursor:pointer;padding:13px 14px;font-weight:800}.quiz-item p{padding:0 14px 14px}.fulltext-body{margin-top:32px}.back-to-visual{display:inline-flex;margin-left:8px;padding:3px 8px;border:1px solid #111827;border-radius:999px;background:#fff8d8;color:#111827;font-size:13px;text-decoration:none}p,li{font-size:18px}@media(max-width:900px){.shell{padding:28px 20px 72px}.minimal-grid,.idea-grid,.study-grid,.concept-grid{grid-template-columns:1fr}.tabbar{width:100%;display:grid;grid-template-columns:1fr 1fr}}
+      </style></head><body><main class="shell"><h1>${escapeHtml(data.title)}</h1><section class="map-core" id="visual-map"><span>中心命题</span><strong>${escapeHtml(data.title)}</strong><em>${escapeHtml(minimalSummary(data.sections[0] || { bullets: [], quote: "" }))}</em></section><section><div class="tabbar"><button class="tab-button active" data-tab="minimal">极简版</button><button class="tab-button" data-tab="refined">精炼版</button></div><div class="tab-panel active" data-panel="minimal"><div class="minimal-grid">${cards}</div></div><div class="tab-panel" data-panel="refined"><div class="idea-grid">${refined}</div></div></section><section class="study-system"><div class="section-heading"><span>Study Mode</span><h2>把 Markdown 变成学习界面</h2></div><div class="study-grid"><article class="study-card"><h3>先扫地图</h3><p>先看中心命题和极简版卡片，建立轮廓。</p></article><article class="study-card"><h3>再抓概念</h3><p>把章节压缩成可复习的概念卡。</p></article><article class="study-card"><h3>最后回查</h3><p>回到完整正文验证细节。</p></article></div><h3>核心概念</h3><div class="concept-grid">${concepts}</div></section><details class="check-understanding"><summary>想确认自己是否理解？展开 5 个问题</summary><div class="quiz-list">${questions}</div></details><details class="fulltext"><summary>展开完整正文</summary><div class="fulltext-body">${data.body}</div></details></main><script>document.querySelectorAll(".tab-button").forEach(b=>b.addEventListener("click",()=>{const t=b.dataset.tab;document.querySelectorAll(".tab-button").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".tab-panel").forEach(p=>p.classList.toggle("active",p.dataset.panel===t));}));const f=document.querySelector(".fulltext");document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener("click",()=>{const target=document.querySelector(a.getAttribute("href"));if(f&&target&&f.contains(target))f.open=true;}));<\/script></body></html>`;
+    }
+
+    function render() {
+      const html = buildHtml($("source").value, $("title").value);
+      $("preview").srcdoc = html;
+      return html;
+    }
+    function download() {
+      const html = render();
+      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "md2html-output.html";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    $("render").addEventListener("click", render);
+    $("download").addEventListener("click", download);
+    render();
+  </script>
+</body>
+</html>
