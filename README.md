@@ -1,9 +1,12 @@
 # md2html Skill
 
-Turn long Markdown or plain-text articles into visual-first HTML pages with:
+Turn long Markdown or plain-text learning materials into visual-first HTML learning pages with:
 
 - a clean title and central thesis
 - density tabs for minimal and refined summaries
+- a study path
+- core concept cards
+- self-test questions
 - colorful section cards
 - collapsed full text with return links back to the visual guide
 
@@ -23,7 +26,7 @@ Restart Codex if the skill list does not refresh automatically.
 Ask Codex:
 
 ```text
-Use $md2html to turn this long Markdown article into a visual HTML page.
+Use $md2html to turn this long Markdown article into an HTML learning interface.
 ```
 
 Or run the bundled renderer directly:

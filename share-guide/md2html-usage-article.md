@@ -1,4 +1,4 @@
-# 我做了一个把长文变成「视觉 HTML」的 Codex Skill
+# 我做了一个把 Markdown 变成「学习界面」的 Codex Skill
 
 很多长文的问题，不是内容不好。
 
@@ -24,7 +24,7 @@
 
 它的作用很简单：
 
-把一篇长 Markdown / 长文案，变成一个更适合人看的视觉 HTML 页面。
+把一篇长 Markdown / 长文案，变成一个更适合学习的新知识界面。
 
 不是普通的 Markdown 转 HTML。
 
@@ -100,13 +100,13 @@ cp -R md2html/md2html ~/.codex/skills/md2html
 把你的长文交给 Codex，然后说：
 
 ```text
-Use $md2html to turn this long Markdown article into a visual HTML page.
+Use $md2html to turn this long Markdown article into an HTML learning interface.
 ```
 
 如果你是中文使用，也可以直接说：
 
 ```text
-使用 $md2html，把这篇长文变成一个适合人看的视觉 HTML 页面。
+使用 $md2html，把这篇长文变成一个适合学习的新知识界面。
 ```
 
 它会生成一个单文件 HTML。
@@ -223,7 +223,7 @@ HTML 页面更接近“产品界面”。
 
 **不是给机器看的 Markdown，**
 
-**而是给人看的视觉页面。**
+**而是给人学习的新知识界面。**
 
 仓库在这里：
 
@@ -232,7 +232,7 @@ https://github.com/Yinmu/md2html
 装好以后，直接用：
 
 ```text
-Use $md2html to turn this long Markdown article into a visual HTML page.
+Use $md2html to turn this long Markdown article into an HTML learning interface.
 ```
 
 就这么简单。

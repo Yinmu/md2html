@@ -1,7 +1,7 @@
 interface:
   display_name: "md2html"
-  short_description: "Turn long articles into visual HTML pages"
+  short_description: "Turn Markdown into learning HTML"
   brand_color: "#2563EB"
-  default_prompt: "Use $md2html to turn this long Markdown article into a colorful visual HTML page with mind-map cards."
+  default_prompt: "Use $md2html to turn this long Markdown article into an HTML learning interface with concept cards and self-test questions."
 policy:
   allow_implicit_invocation: true

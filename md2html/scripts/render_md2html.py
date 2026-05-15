@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render Markdown or plain text into a self-contained visual HTML page."""
+"""Render Markdown or plain text into a self-contained HTML learning interface."""
 
 from __future__ import annotations
 
@@ -383,6 +383,20 @@ def minimal_summary(title: str, bullets: list[str], quote: str) -> str:
     return "这一节需要回到原文查看细节。"
 
 
+def clean_title_for_learning(title: str) -> str:
+    title = re.sub(r"^\s*\d+[\.\u3001]\s*", "", title).strip()
+    return title or "核心概念"
+
+
+def question_for_section(title: str) -> str:
+    clean = clean_title_for_learning(title).rstrip("。.!！")
+    if clean.endswith(("？", "?")):
+        return clean
+    if any(k in clean for k in ("怎么", "如何", "为什么", "什么")):
+        return f"{clean}？"
+    return f"这一节最需要记住的判断是什么：{clean}？"
+
+
 def is_numbered_heading(text: str) -> bool:
     return bool(re.match(r"^\d+[\.\u3001]\s*", text.strip()))
 
@@ -493,6 +507,69 @@ def visual_html(title: str, sections: list[VisualSection]) -> str:
     '''
 
 
+def learning_html(sections: list[VisualSection]) -> str:
+    if not sections:
+        return ""
+
+    concept_sections = sections[1:7] if len(sections) > 1 else sections[:6]
+    concept_cards = []
+    for section in concept_sections:
+        summary = minimal_summary(section.title, section.bullets, section.quote)
+        concept_cards.append(
+            f'''<article class="concept-card">
+              <strong>{html.escape(clean_title_for_learning(section.title))}</strong>
+              <p>{html.escape(summary)}</p>
+            </article>'''
+        )
+
+    quiz_items = []
+    for section in sections[:6]:
+        answer = minimal_summary(section.title, section.bullets, section.quote)
+        quiz_items.append(
+            f'''<details class="quiz-item">
+              <summary>{html.escape(question_for_section(section.title))}</summary>
+              <p>{html.escape(answer)}</p>
+            </details>'''
+        )
+
+    return f'''
+      <section class="study-system" aria-label="Learning system">
+        <div class="section-heading">
+          <span>Study Mode</span>
+          <h2>把 Markdown 变成学习界面</h2>
+        </div>
+        <div class="study-grid">
+          <article class="study-card">
+            <span>01</span>
+            <h3>先扫地图</h3>
+            <p>先看中心命题和极简版卡片，建立整篇材料的轮廓。</p>
+          </article>
+          <article class="study-card">
+            <span>02</span>
+            <h3>再抓概念</h3>
+            <p>把章节压缩成可记忆的概念卡，避免陷进长段落。</p>
+          </article>
+          <article class="study-card">
+            <span>03</span>
+            <h3>最后回查</h3>
+            <p>用自测题确认理解，再回到完整正文验证细节。</p>
+          </article>
+        </div>
+
+        <div class="learning-columns">
+          <section class="concepts" aria-label="Core concepts">
+            <h3>核心概念</h3>
+            <div class="concept-grid">{''.join(concept_cards)}</div>
+          </section>
+          <section class="quiz" aria-label="Self test">
+            <h3>自测问题</h3>
+            <div class="quiz-list">{''.join(quiz_items)}</div>
+          </section>
+        </div>
+      </section>
+    '''
+
+
 def toc_html(headings: list[Heading]) -> str:
     items = []
     for h in headings:
@@ -517,6 +594,7 @@ def build_html(source: str, title_override: str | None, accent: str) -> str:
         dek=html.escape(dek),
         body=body,
         visual=visual_html(title, sections),
+        learning=learning_html(sections),
         toc=toc_html(headings),
         units=f"{units:,}",
         minutes=minutes,
@@ -747,6 +825,116 @@ HTML_TEMPLATE = """<!doctype html>
     .cyan {{ background: #c8f3ff; }}
     .rose {{ background: #ffd6e8; }}
     .slate {{ background: #e7ecf2; }}
+    .study-system {{
+      margin: 52px 0 44px;
+      padding: 28px;
+      border: 1px solid #111827;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 6px 6px 0 #111827;
+    }}
+    .section-heading {{
+      display: grid;
+      gap: 8px;
+      margin-bottom: 22px;
+    }}
+    .section-heading span {{
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }}
+    .section-heading h2 {{
+      margin: 0;
+      padding: 0;
+      font-size: clamp(28px, 3vw, 42px);
+    }}
+    .study-grid {{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }}
+    .study-card {{
+      padding: 18px;
+      border: 1px solid #111827;
+      border-radius: 8px;
+      background: #fbfaf7;
+    }}
+    .study-card span {{
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 28px;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      background: #111827;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+    }}
+    .study-card h3, .concepts h3, .quiz h3 {{
+      margin: 0 0 10px;
+      font-size: 21px;
+    }}
+    .study-card p {{
+      margin: 0;
+      color: #4b5563;
+      font-size: 15px;
+      line-height: 1.55;
+    }}
+    .learning-columns {{
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
+      gap: 22px;
+      align-items: start;
+    }}
+    .concept-grid {{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }}
+    .concept-card {{
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fbff;
+    }}
+    .concept-card strong {{
+      display: block;
+      margin-bottom: 8px;
+      font-size: 17px;
+      line-height: 1.3;
+    }}
+    .concept-card p {{
+      margin: 0;
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.55;
+    }}
+    .quiz-list {{
+      display: grid;
+      gap: 10px;
+    }}
+    .quiz-item {{
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff8d8;
+    }}
+    .quiz-item summary {{
+      cursor: pointer;
+      padding: 13px 14px;
+      font-weight: 800;
+      line-height: 1.4;
+    }}
+    .quiz-item p {{
+      margin: 0;
+      padding: 0 14px 14px;
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.55;
+    }}
     details.fulltext {{
       max-width: var(--measure);
       margin: 26px auto 0;
@@ -877,7 +1065,7 @@ HTML_TEMPLATE = """<!doctype html>
       .shell {{
         padding: 28px 20px 72px;
       }}
-      .idea-grid, .minimal-grid {{ grid-template-columns: 1fr; }}
+      .idea-grid, .minimal-grid, .study-grid, .learning-columns, .concept-grid {{ grid-template-columns: 1fr; }}
       .map-core {{ min-height: auto; text-align: left; }}
       .tabbar {{ width: 100%; display: grid; grid-template-columns: 1fr 1fr; }}
       header {{ padding-top: 22px; }}
@@ -894,6 +1082,7 @@ HTML_TEMPLATE = """<!doctype html>
         <h1>{title}</h1>
       </header>
       {visual}
+      {learning}
       <details class="fulltext">
         <summary>展开完整正文</summary>
         <div class="fulltext-body">
