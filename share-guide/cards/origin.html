@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>humanview origin</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; width: 1200px; height: 675px; background: #fff; color: #111827; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; }
+    .canvas { height: 100%; padding: 54px; display: grid; grid-template-columns: 1fr 1fr; gap: 34px; background: #fbfaf7; }
+    h1 { margin: 0; font-size: 70px; line-height: 1; letter-spacing: 0; }
+    .left { display: flex; flex-direction: column; justify-content: center; gap: 24px; }
+    .tag { width: max-content; padding: 9px 15px; border: 2px solid #111827; border-radius: 999px; background: #fff0a8; font-size: 20px; font-weight: 950; }
+    p { margin: 0; color: #4b5563; font-size: 27px; line-height: 1.45; }
+    .quote { align-self: center; padding: 34px; border: 3px solid #111827; border-radius: 18px; background: #fff; box-shadow: 12px 12px 0 #111827; }
+    .quote b { display: block; margin-bottom: 18px; font-size: 34px; line-height: 1.12; }
+    .quote span { display: block; padding-top: 18px; border-top: 2px solid #e6e8eb; color: #667085; font-size: 22px; line-height: 1.45; }
+    .arrow { margin: 18px 0; font-size: 52px; color: #d92d20; font-weight: 950; }
+  </style>
+</head>
+<body>
+  <main class="canvas">
+    <section class="left">
+      <div class="tag">起点</div>
+      <h1>Markdown<br>不是终点</h1>
+      <p>当 agent 已经能生成网页，交付给人的内容就不必继续停在一大段线性文字里。</p>
+    </section>
+    <section class="quote">
+      <b>Claude Code 团队相关讨论，把很多人拉回到一个简单问题：</b>
+      <div class="arrow">HTML > 长 Markdown？</div>
+      <span>不是格式战争，而是交付对象变了：机器需要源文件，人需要视图。</span>
+    </section>
+  </main>
+</body>
+</html>

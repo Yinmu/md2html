@@ -2,39 +2,51 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>humanview output</title>
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; width: 1200px; height: 675px; background: #fbfaf7; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; color: #111827; }
-    .card { width: 1120px; height: 595px; margin: 40px; padding: 38px; border: 2px solid #111827; border-radius: 18px; background: #fff; box-shadow: 14px 14px 0 #111827; }
-    h1 { margin: 0 0 24px; font-size: 52px; line-height: 1.08; text-align: center; letter-spacing: 0; }
-    .thesis { width: 760px; margin: 0 auto 24px; padding: 20px; border: 2px solid #111827; border-radius: 12px; background: #fff8d8; text-align: center; font-size: 25px; font-weight: 850; }
-    .tabs { display: inline-flex; gap: 8px; margin: 0 0 18px; padding: 6px; border: 2px solid #111827; border-radius: 999px; }
-    .tab { padding: 8px 22px; border-radius: 999px; font-weight: 900; font-size: 19px; }
-    .tab:first-child { background: #111827; color: #fff; }
-    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .mini { min-height: 118px; padding: 16px; border: 2px solid #111827; border-radius: 12px; box-shadow: 4px 4px 0 #111827; }
-    .mini:nth-child(1) { background: #ffd6c9; }
-    .mini:nth-child(2) { background: #dbeafe; }
-    .mini:nth-child(3) { background: #c9f7df; }
-    .mini:nth-child(4) { background: #fff0a8; }
-    .mini:nth-child(5) { background: #eadcff; }
-    .mini:nth-child(6) { background: #c8f3ff; }
-    .num { display: inline-block; margin-bottom: 8px; font-weight: 950; }
-    p { margin: 0; font-size: 18px; line-height: 1.35; font-weight: 760; }
+    body { margin: 0; width: 1200px; height: 675px; background: #101828; color: #111827; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; }
+    .canvas { height: 100%; padding: 48px; display: grid; gap: 24px; background: linear-gradient(135deg, #fbfaf7 0%, #fbfaf7 58%, #dbeafe 58%, #dbeafe 100%); }
+    header { display: flex; align-items: end; justify-content: space-between; }
+    .kicker { color: #d92d20; font-size: 20px; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; }
+    h1 { margin: 8px 0 0; font-size: 62px; line-height: 1; letter-spacing: 0; }
+    .grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; align-items: stretch; }
+    .map { padding: 28px; border: 3px solid #111827; border-radius: 18px; background: #fff; box-shadow: 10px 10px 0 #111827; display: grid; align-content: center; gap: 18px; }
+    .map span { color: #667085; font-size: 18px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+    .map strong { font-size: 38px; line-height: 1.1; }
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .card { min-height: 118px; padding: 18px; border: 2px solid #111827; border-radius: 14px; box-shadow: 6px 6px 0 rgba(17,24,39,.9); }
+    .card:nth-child(1){background:#ffd6c9}.card:nth-child(2){background:#c9f7df}.card:nth-child(3){background:#fff0a8}.card:nth-child(4){background:#eadcff}
+    .card b { display: block; margin-bottom: 8px; font-size: 24px; }
+    .card p { margin: 0; color: #344054; font-size: 19px; line-height: 1.35; }
+    .side { display: grid; gap: 16px; }
+    .pill { padding: 20px; border: 2px solid #111827; border-radius: 16px; background: #fff; }
+    .pill b { display: block; font-size: 28px; }
+    .pill span { color: #667085; font-size: 20px; }
   </style>
 </head>
 <body>
-  <main class="card">
-    <h1>md2html 输出的<br>是一个学习界面</h1>
-    <div class="thesis">学习路径：先看懂，再抓概念，最后回到原文验证</div>
-    <div class="tabs"><span class="tab">极简版</span><span class="tab">精炼版</span></div>
+  <main class="canvas">
+    <header>
+      <div><div class="kicker">Fixed Template + Dynamic Content</div><h1>不是把 MD 变漂亮<br>而是换一种理解界面</h1></div>
+    </header>
     <section class="grid">
-      <div class="mini"><span class="num">01</span><p>一节一句，快速扫完全文结构</p></div>
-      <div class="mini"><span class="num">02</span><p>核心概念变成可复习卡片</p></div>
-      <div class="mini"><span class="num">03</span><p>想深入，再切到精炼版</p></div>
-      <div class="mini"><span class="num">04</span><p>理解检查默认折叠，不打断阅读</p></div>
-      <div class="mini"><span class="num">05</span><p>点击卡片回到原文验证</p></div>
-      <div class="mini"><span class="num">06</span><p>正文里可一键回到图文导读</p></div>
+      <div class="map">
+        <span>中心命题</span>
+        <strong>先给人一张地图，再让人回到原文验证细节。</strong>
+        <div class="cards">
+          <div class="card"><b>极简版</b><p>每节只留一个判断。</p></div>
+          <div class="card"><b>精炼版</b><p>保留要点、证据和含义。</p></div>
+          <div class="card"><b>核心概念</b><p>把长文变成可复习对象。</p></div>
+          <div class="card"><b>完整正文</b><p>细节仍可展开，不丢源文。</p></div>
+        </div>
+      </div>
+      <div class="side">
+        <div class="pill"><b>人类观看</b><span>颜色、卡片、层级、导航</span></div>
+        <div class="pill"><b>Agent 执行</b><span>一个 skill，一句 prompt，一个 HTML</span></div>
+        <div class="pill"><b>本地优先</b><span>Node.js，无 npm 依赖</span></div>
+      </div>
     </section>
   </main>
 </body>

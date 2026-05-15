@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>md2html</title>
+  <title>humanview</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -105,7 +105,7 @@
 <body>
   <div class="app">
     <aside>
-      <h1>md2html</h1>
+      <h1>humanview</h1>
       <p class="sub">把 Markdown 变成 HTML 学习界面。零依赖，浏览器里直接用。</p>
 
       <label for="title">标题</label>
@@ -133,7 +133,7 @@ AI 降低制作门槛，但真正稀缺的是判断和取舍。
       <p class="hint">不需要 Python。打开这个文件，粘贴 Markdown，生成后下载 HTML。</p>
     </aside>
     <main>
-      <iframe id="preview" title="md2html preview"></iframe>
+      <iframe id="preview" title="humanview preview"></iframe>
     </main>
   </div>
 
@@ -247,7 +247,7 @@ AI 降低制作门槛，但真正稀缺的是判断和取舍。
         const bullets = bestPoints(s.paras, 3);
         return { title: s.title, slug: s.slug, bullets, quote: bullets[0] || "", index };
       });
-      return { title: title || "Markdown Article", sections: visualSections, body: body.join("\n") };
+      return { title: title || "HumanView Article", sections: visualSections, body: body.join("\n") };
     }
 
     function buildHtml(markdown, titleOverride = "") {
@@ -278,7 +278,7 @@ AI 降低制作门槛，但真正稀缺的是判断和取舍。
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "md2html-output.html";
+      a.download = "humanview-output.html";
       a.click();
       URL.revokeObjectURL(url);
     }

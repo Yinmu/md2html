@@ -234,7 +234,7 @@ def infer_title(text: str) -> str:
         clean = line.strip().strip("#").strip()
         if clean:
             return clean[:80]
-    return "Markdown Article"
+    return "HumanView Article"
 
 
 def reading_stats(text: str) -> tuple[int, int]:

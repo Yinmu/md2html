@@ -1,0 +1,7 @@
+interface:
+  display_name: "humanview"
+  short_description: "Turn long content into human-friendly HTML"
+  brand_color: "#2563EB"
+  default_prompt: "Use $humanview to turn this long article or collected copy into a human-friendly HTML view with concept cards and optional understanding checks."
+policy:
+  allow_implicit_invocation: true

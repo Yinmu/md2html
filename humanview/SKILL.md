@@ -1,13 +1,13 @@
 ---
-name: md2html
-description: Use when the user wants to turn a long Markdown article, learning note, draft, essay, report, transcript, or plain-text document into a human-friendly HTML learning interface with a central thesis, density tabs, concept cards, study path, optional understanding-check questions, summaries, navigation, and responsive layout. Trigger for requests like "make this long doc easier to learn", "convert this article to a learning HTML", "HTML is better for humans than long Markdown", "make a concept map", "make this into study cards", "present this copy as an HTML page", or "create a readable web version of this long text".
+name: humanview
+description: Use when the user wants to turn local Markdown, collected copy, a long article, learning note, draft, essay, report, transcript, or plain-text document into a human-friendly HTML view with a central thesis, density tabs, concept cards, study path, optional understanding-check questions, summaries, navigation, and responsive layout. Trigger for requests like "make this long doc easier to learn", "convert this article to a human view", "HTML is better for humans than long Markdown", "make a concept map", "make this into study cards", "present this copy as an HTML page", or "create a readable web version of this long text".
 metadata:
-  short-description: Turn Markdown into a learning UI
+  short-description: Turn content into a human view
 ---
 
-# md2html
+# humanview
 
-Transform Markdown from a linear source document into a visual HTML learning interface for humans, not a mechanical Markdown export.
+Transform Markdown or collected long-form copy from a linear source document into a visual HTML view for humans, not a mechanical Markdown export.
 
 ## Core Intent
 
@@ -28,7 +28,7 @@ The implementation should be treated as a stable template system:
 - `scripts/parser.js` converts Markdown into article structure and full-text HTML.
 - `scripts/summarize.js` converts article structure into a learning content model.
 - `scripts/template.js` owns the fixed HTML interface and visual layout.
-- `scripts/render_md2html.js` only connects file IO, model building, and rendering.
+- `scripts/render_humanview.js` only connects file IO, model building, and rendering.
 
 When improving the visual experience, edit `template.js`. When improving summary quality, edit `summarize.js`. When improving Markdown support, edit `parser.js`.
 
@@ -36,7 +36,7 @@ When improving the visual experience, edit `template.js`. When improving summary
 
 1. Read the source article or accept pasted text.
 2. Identify the title, subtitle, section hierarchy, repeated motifs, and 3-7 key ideas.
-3. If the source is Markdown or plain text, render it with `scripts/render_md2html.js`.
+3. If the source is Markdown or plain text, render it with `scripts/render_humanview.js`.
 4. Improve the generated HTML when needed:
    - Add a useful visual summary if the article lacks one.
    - Add a learning path: skim map, learn concepts, then verify in the original text.
@@ -56,18 +56,18 @@ When improving the visual experience, edit `template.js`. When improving summary
 Use the bundled JavaScript script for the first pass:
 
 ```bash
-node scripts/render_md2html.js input.md output.html
+node scripts/render_humanview.js input.md output.html
 ```
 
 Optional flags:
 
 ```bash
-node scripts/render_md2html.js input.md output.html --title "Readable Title" --accent "#2563eb"
+node scripts/render_humanview.js input.md output.html --title "Readable Title" --accent "#2563eb"
 ```
 
 The script is intentionally dependency-free and creates a complete HTML document with embedded CSS and JavaScript. It automatically builds a central thesis, density tabs, concept cards, a learning path, optional understanding-check questions, and a collapsed full-text section.
 
-`tool.html` is only a browser-based visual tester for manual experiments. `scripts/render_md2html.py` is kept as a legacy fallback, but new skill runs should prefer `scripts/render_md2html.js`.
+`tool.html` is only a browser-based visual tester for manual experiments. `scripts/render_humanview.py` is kept as a legacy fallback, but new skill runs should prefer `scripts/render_humanview.js`.
 
 ## Design Rules
 

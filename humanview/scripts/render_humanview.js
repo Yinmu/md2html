@@ -39,7 +39,7 @@ function parseArgs(argv) {
     else throw new Error(`Unexpected argument: ${value}`);
   }
   if (!args.input || !args.output) {
-    throw new Error("Usage: node scripts/render_md2html.js input.md output.html [--title \"Title\"] [--accent \"#2563eb\"]");
+    throw new Error("Usage: node scripts/render_humanview.js input.md output.html [--title \"Title\"] [--accent \"#2563eb\"]");
   }
   return args;
 }
