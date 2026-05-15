@@ -23,6 +23,15 @@ Default to a single self-contained `.html` file with visual-first study sections
 
 Prefer the bundled JavaScript renderer so the skill works in Codex and Claude Code environments without Python. The renderer uses Node.js built-ins only and has no npm dependencies.
 
+The implementation should be treated as a stable template system:
+
+- `scripts/parser.js` converts Markdown into article structure and full-text HTML.
+- `scripts/summarize.js` converts article structure into a learning content model.
+- `scripts/template.js` owns the fixed HTML interface and visual layout.
+- `scripts/render_md2html.js` only connects file IO, model building, and rendering.
+
+When improving the visual experience, edit `template.js`. When improving summary quality, edit `summarize.js`. When improving Markdown support, edit `parser.js`.
+
 ## Workflow
 
 1. Read the source article or accept pasted text.
